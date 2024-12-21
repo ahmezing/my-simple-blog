@@ -24,7 +24,7 @@ export const getPosts = cache(async (
 
   try {
     const result = await fetch(`${baseUrl}/api/posts?${searchParams}`, {
-      next: { revalidate: 3600 },
+      next: { revalidate: 300 },
     });
 
     if (!result.ok) throw new Error('Failed to fetch posts');
