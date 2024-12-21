@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/database';
+import { getPostFromDB } from '@/services/posts';
 
-export async function GET(request: Request, {params}: { params: Promise<{ id: number }>  }) {
+export async function GET(request: Request, {params}: { params: Promise<{ id: number }> }) {
   try {
     const { id } = await params;
 
@@ -12,19 +12,7 @@ export async function GET(request: Request, {params}: { params: Promise<{ id: nu
       );
     }
 
-    const { data: post, error } = await supabase
-      .from('posts')
-      .select('*')
-      .eq('id', id)
-      .single();
-
-    if (error) {
-      console.error('Error fetching post:', error);
-      return NextResponse.json(
-        { message: 'فشل في جلب المنشور' },
-        { status: 500 }
-      );
-    }
+    const post = await getPostFromDB(id);
 
     if (!post) {
       return NextResponse.json(

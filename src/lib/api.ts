@@ -1,43 +1,56 @@
 import { Post, PaginatedResponse, SortOption } from './types';
 import { cache } from 'react';
+import { getPostFromDB, getPostsFromDB } from '@/services/posts';
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-const PAGE_SIZE = 6;
 
-// Fetch paginated list of posts
+const isBuildTime = () => process.env.NODE_ENV === 'production' && !baseUrl;
+
 export const getPosts = cache(async (
   page = 1,
   sortBy: SortOption = 'newest',
   search?: string
 ): Promise<PaginatedResponse<Post>> => {
+  if (isBuildTime()) {
+    return getPostsFromDB(page, sortBy, search);
+  }
+
   const searchParams = new URLSearchParams({
     page: page.toString(),
-    pageSize: PAGE_SIZE.toString(),
+    pageSize: '6',
     sortBy,
     ...(search && { search }),
   });
 
-  const result = await fetch(`${baseUrl}/api/posts?${searchParams}`, {
-    next: { revalidate: 3600 },
-  });
+  try {
+    const result = await fetch(`${baseUrl}/api/posts?${searchParams}`, {
+      next: { revalidate: 3600 },
+    });
 
-  if (!result.ok) {
-    throw new Error('حدث خطأ أثناء تحميل المقالات');
+    if (!result.ok) throw new Error('Failed to fetch posts');
+    return result.json();
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    return getPostsFromDB(page, sortBy, search);
   }
-  return result.json();
 });
 
-// Fetch details of a single post by ID
-export const getPost = cache(async (id: number): Promise<Post> => {
-  const result = await fetch(`${baseUrl}/api/posts/${id}`, {
-    next: { revalidate: 3600 },
-  });
-
-  if (!result.ok) {
-    throw new Error('حدث خطأ أثناء تحميل المقال');
+export const getPost = cache(async (id: number): Promise<Post | null> => {
+  if (isBuildTime()) {
+    return getPostFromDB(id);
   }
 
-  return result.json();
+  try {
+    const result = await fetch(`${baseUrl}/api/posts/${id}`, {
+      next: { revalidate: 3600 },
+    });
+
+    if (!result.ok) throw new Error('Failed to fetch post');
+    return result.json();
+  } catch (error) {
+    console.error('Error fetching post:', error);
+    return getPostFromDB(id);
+  }
 });
 
 // Create a new post
