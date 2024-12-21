@@ -3,8 +3,8 @@ import { useSearchParams } from 'next/navigation';
 import { usePosts } from '@/lib/queries';
 import PostCard from './PostCard';
 import SkeletonPostCard from '../loading/SkeletonPostCard';
-import PaginationControls from './PaginationControls';
 import { SortOption } from '@/lib/types';
+import PostPagination from './PostPagination';
 
 export default function PostList() {
   const searchParams = useSearchParams();
@@ -41,7 +41,7 @@ export default function PostList() {
           <PostCard key={post.id} post={post} />
         ))}
       </div>
-      <PaginationControls totalPages={totalPages} />
+      <PostPagination totalPages={totalPages} />
     </>
   );
 }
