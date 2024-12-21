@@ -14,7 +14,7 @@ export async function generateStaticParams() {
 }
 
 // Post detail page with ssr
-export default async function PostPage({ params }: { params: { id: number } }) {
+export default async function PostPage({params}: { params: Promise<{ id: number }>  }) {
   const queryClient = new QueryClient();
   const { id } = await params;
 

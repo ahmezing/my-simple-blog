@@ -1,12 +1,17 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/database';
 
-export async function GET(
-  request: Request,
-  { params }: { params: { id: number } }
-) {
+export async function GET(request: Request, {params}: { params: Promise<{ id: number }>  }) {
   try {
-    const { id } = await params
+    const { id } = await params;
+
+    if (isNaN(id)) {
+      return NextResponse.json(
+        { message: 'معرف غير صالح' },
+        { status: 400 }
+      );
+    }
+
     const { data: post, error } = await supabase
       .from('posts')
       .select('*')
