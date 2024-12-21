@@ -31,7 +31,7 @@
 
 1. Clone the repository:
 ```bash
-git clone [repository-url]
+git clone https://github.com/ahmezing/my-simple-blog.git
 cd my-simple-blog
 ```
 
