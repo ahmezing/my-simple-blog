@@ -7,11 +7,14 @@ import { ArrowRight } from "lucide-react";
 export default function SkeletonPostDetail() {
   return (
     <main className="container mx-auto px-4 py-8" dir="rtl">
-      <div className="mb-6">
+      <div className="mb-6 flex items-center justify-between">
         <Button variant="ghost" disabled>
           <ArrowRight className="ml-2" />
           <Skeleton className="h-4 w-32" />
         </Button>
+        <div className="md:hidden">
+          <Skeleton className="h-9 w-28" />
+        </div>
       </div>
       <Card className="mx-auto">
         <CardHeader className="space-y-4">

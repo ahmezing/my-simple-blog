@@ -1,23 +1,24 @@
 'use client'; //csr
 import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue }
     from "@/components/ui/select";
 import { SortOption } from '@/lib/types';
 import { useDebounce } from '@/hooks/useDebounce';
+import { Plus } from 'lucide-react';
 
 export default function PostControls() {
     const searchParams = useSearchParams();
     const router = useRouter();
 
-    // States for search query and sort option
     const [search, setSearch] = useState(searchParams.get('search') || '');
     const [sortBy, setSortBy] = useState<SortOption>(
         (searchParams.get('sortBy') as SortOption) || 'newest'
     );
 
-    // Debounce search input to reduce API calls
     const debouncedSearch = useDebounce(search, 300);
 
     // Update query parameters on change
@@ -35,8 +36,16 @@ export default function PostControls() {
 
     return (
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <h1>المقالات</h1>
-            <div className="flex items-center gap-4 md:flex-nowrap sm:justify-between">
+            <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-bold primary">المقالات</h1>
+                <Link href="/add-post" className="md:hidden">
+                    <Button size="sm" className="gap-2">
+                        <Plus className="h-4 w-4" />
+                        مقال جديد
+                    </Button>
+                </Link>
+            </div>
+            <div className="flex flex-row gap-4 sm:flex-row sm:items-center justify-between">
                 <Input
                     type="search"
                     placeholder="ابحث عن مقال..."

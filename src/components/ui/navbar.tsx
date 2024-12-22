@@ -35,7 +35,7 @@ export default function Navbar() {
               className="text-md font-medium hover:text-primary-500 transition-all duration-300 ease-in-out"
               prefetch={false}
             >
-              كتابة منشور جديد
+              كتابة مقال جديد
             </Link>
           </nav>
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
@@ -71,7 +71,7 @@ export default function Navbar() {
                   prefetch={false}
                   onClick={handleLinkClick}
                 >
-                  كتابة منشور جديد
+                  كتابة مقال جديد
                 </Link>
               </nav>
             </SheetContent>
